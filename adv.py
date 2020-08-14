@@ -5,6 +5,24 @@ from world import World
 import random
 from ast import literal_eval
 
+
+class Stack():
+    def __init__(self):
+        self.stack = []
+
+    def push(self, value):
+        self.stack.append(value)
+
+    def pop(self):
+        if self.size() > 0:
+            return self.stack.pop()
+        else:
+            return None
+
+    def size(self):
+        return len(self.stack)
+
+
 # Load world
 world = World()
 
@@ -60,28 +78,74 @@ for i in room_graph:
     my_graph[i] = room_graph[i][1]
 
 
-print("My graph ", my_graph)
+print("My graph ", my_graph[1])
+
+for room in my_graph[1]:
+    print("Individual room ", room[0],
+          player.current_room.get_room_in_direction(room[0]).id)
+
+# player.get_room_in_direction
 
 
-def explore():
+def explore(graph):
+    s = Stack()
+    visited = {}
+    traveled_path = []
 
-    print("room graph ", room_graph[1][1])
+    s.push(player.current_room.id)
+
+    while s.size() > 0:
+        # path = s.pop()
+        current_room_id = s.pop()
+
+        if current_room_id not in visited:
+            visited[current_room_id] = 1
+
+            # This loop adds neighboring rooms to the stack
+            for neighbor in graph[current_room_id]:
+
+                neighboring_room = player.current_room.get_room_in_direction(
+                    neighbor[0]).id
+
+                # add neighboring room ids to stack, if they are not in visited
+                if neighboring_room not in visited:
+                    s.push(neighboring_room)
+
+            # this loop travels to the next room in the stack, if unexplored room is adjacent
+            for neighbor in graph[current_room_id]:
+                cardinal_direction = neighbor[0]
+                if player.current_room.get_room_in_direction(
+                        neighbor[0]).id = s[-1]:
+                    traveled_path.append(cardinal_direction)
+                    player.travel(cardinal_direction)
+
+            # possible back tracking. . .
+            for i in traveled_path:
+                if traveled_path[-i]
+
+        # the player needs to travel to the next room to pop off the stack, which might not be adjacent.
+
+
+def fiddling():
+
+    # print("room graph ", room_graph[1][1])
 
     visited = []
     visited.append(player.current_room.id)
 
     room_exits = player.current_room.get_exits()
-    print("player ", room_exits)
+    # print("player ", room_exits)
 
     for exit in room_exits:
-        print("Room directions ", player.current_room.get_room_in_direction(exit).id)
+        pass
+        # print("Room directions ", player.current_room.get_room_in_direction(exit).id)
 
     traversal_path = ['n', 'n']
     return traversal_path
 # traversal_path = []
 
 
-traversal_path = explore()
+traversal_path = fiddling()
 
 # TRAVERSAL TEST - DO NOT MODIFY
 visited_rooms = set()
